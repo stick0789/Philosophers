@@ -81,48 +81,28 @@ int main(int ac, char **av)
 		i = 0;
 		while (i < data.num_philos)
 		{
-			if (pthread_create(&threads[i], NULL, philosopher, &philos[i]) != 0)
-				return (1); // Manejo de error simple
-			if (pthread_detach(threads[i]) != 0)
-				return (1);
-			i++;
-		}
-		pthread_create(&monitor, NULL, monitor_routine, &data);
-		/*
-		while (i < data.num_philos)
-		{
 			pthread_create(&threads[i], NULL, philosopher, &philos[i]);
+			//if (pthread_create(&threads[i], NULL, philosopher, &philos[i]) != 0)
+			//	return (1); // Manejo de error simple
+			//if (pthread_detach(threads[i]) != 0)
+			//	return (1);
 			i++;
 		}
 		pthread_create(&monitor, NULL, monitor_routine, &data);
-		*/
-		//i = 0;
-		//pthread_detach(monitor);
+
 		pthread_join(monitor, NULL);
-		/*while (i < data.num_philos)
-		{
-			pthread_join(threads[i], NULL);
-			i++;
-		}*/
-		/*
+		i = 0;
 		while (i < data.num_philos)
 		{
-			if (data.num_philos == 1)
-			{
-				pthread_join(threads[0], NULL);
-				break ;
-			}
-			else
-			{
-				pthread_join(threads[i], NULL);
-				i++;
-			}
+			pthread_detach(threads[i]);
+			pthread_join(threads[i], NULL);
+			
+			i++;
 		}
-		*/
-		sleep(2);
+
+		//sleep(2);
 		clean(&data, philos);
 		free(threads);
 	}
-	write(1, "\n", 1);
 }
 

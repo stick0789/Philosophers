@@ -40,7 +40,7 @@ long    ft_atoi(const char *nptr);
 void    ft_putstr_fd(char *s, int fd);
 void    clean(t_data *data, t_philo *philos);
 long long       get_time(void);
-void    precise_usleep(long long miliseconds);
+void    precise_usleep(long long miliseconds, t_data *data);
 void    print_status(t_philo *philo, char *str);
 /***	Inicializaciones datos/data inits	***/
 t_data  init_data(int ac, char **av);

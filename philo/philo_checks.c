@@ -68,9 +68,10 @@ void	*monitor_routine(void *arg)
 
 	data = (t_data *)arg;
 	//while (!check_stop(data))
-	while (!data->stop_flag)
+	//while (!data->stop_flag)
+	while (!check_stop(data))
 	{
-		usleep(1000);
+		usleep(1500);
 		i = 0;
 		while(i < data->num_philos)
 		{

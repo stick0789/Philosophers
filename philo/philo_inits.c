@@ -28,6 +28,7 @@ t_data	init_data(int ac, char **av)
 	data.forks = malloc(data.num_philos * sizeof(pthread_mutex_t));
 	if (!data.forks)
 		ft_putstr_fd("Error: Fallo en malloc data.forks", 1);
+	i = 0;
 	while (i < data.num_philos)
 	{
 		if(pthread_mutex_init(&data.forks[i], NULL) != 0)
@@ -40,7 +41,7 @@ t_data	init_data(int ac, char **av)
 		ft_putstr_fd("Error: Fallo al crear mutex de parada", 1);
 	data.stop_flag = 0;
 	data.start_time = get_time();
-    	return data;
+    return data;
 }
 
 //Inicializar Philos

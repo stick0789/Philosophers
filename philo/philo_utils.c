@@ -64,11 +64,16 @@ long long	get_time(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-void	precise_usleep(long long miliseconds)
+void	precise_usleep(long long miliseconds, t_data *data)
 {
 	long long start;
 
 	start = get_time();
 	while (get_time() - start < miliseconds)
-		usleep(miliseconds/10);
+	{
+		if (check_stop(data))
+			break ;
+		usleep(1000);
+		//usleep(miliseconds/10);
+	}
 }
