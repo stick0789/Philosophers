@@ -35,10 +35,7 @@ typedef struct s_philo {
 } t_philo;
 
 /***	Funciones Auxiliares/Auxiliar Function	***/
-//int     ft_strlen(const char *s);
-//char    *ft_lltoa(long long n);
 long    ft_atoi(const char *nptr);
-void    ft_putstr_fd(char *s, int fd);
 void    clean(t_data *data, t_philo *philos);
 long long       get_time(void);
 void    precise_usleep(long long miliseconds, t_data *data);
@@ -48,11 +45,18 @@ int    validate_av(int ac, char **av);
 /***	Inicializaciones datos/data inits	***/
 t_data  init_data(int ac, char **av);
 t_philo *init_philos(t_data *data);
+void	init_mutexes(t_data *data);
+/***	Rutina filosofos/Philosopher routine	***/
+void    eat(t_philo *philo);
+void    sleep_philo(t_philo *philo);
+void    release_forks(t_philo *philo);
 /***	Monitor y verificadores/Checkers and monitor	***/
+int	check_meals(t_data *data);
+long long	get_last_meal(t_philo *philo);
 void	set_stop(t_data *data);
 void    *monitor_routine(void *arg);
 int     check_stop(t_data *data);
-void    update_last_meal(t_philo *philo);
+//void    update_last_meal(t_philo *philo);
 /***	Logica del filosofo/Philosopher Logic	***/
 void    *philosopher(void *arg);
 

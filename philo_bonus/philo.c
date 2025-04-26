@@ -31,20 +31,10 @@ int main(int ac, char **av)
 		while (i < data.num_philos)
 		{
 			pthread_create(&threads[i], NULL, philosopher, &philos[i]);
-			//caso especifico para que muera con un solo filo y termine el programa
-			//if (data.num_philos == 1)
-			//{
-			//	if (pthread_detach(threads[i]) != 0)
-			//		return (1);
-			//}
 			i++;
 		}
 		pthread_create(&monitor, NULL, monitor_routine, &data);
-
-		pthread_join(monitor, NULL);
 		
-		//if (data.num_philos > 1)
-		//{
 		i = 0;
 		while (i < data.num_philos)
 		{
@@ -57,7 +47,7 @@ int main(int ac, char **av)
 				pthread_join(threads[i], NULL);	
 			i++;
 		}
-		//}
+		pthread_join(monitor, NULL);
 		sleep(2);
 		clean(&data, philos);
 		free(threads);

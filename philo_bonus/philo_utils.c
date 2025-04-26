@@ -11,18 +11,27 @@
 /* ************************************************************************** */
 #include "philo.h"
 
-void	ft_putstr_fd(char *s, int fd)
+void	print_status(t_philo *philo, char *str)
 {
-	if (!s)
-		return ((void) NULL);
-	while (*s)
-		write(fd, s++, 1);
+	pthread_mutex_lock(&philo->shared_data->print_mutex);
+	if (!check_stop(philo->shared_data))
+	{
+		printf("%lld %d %s\n", get_time() - philo->shared_data->start_time,
+			philo->id, str);
+	}
+	pthread_mutex_unlock(&philo->shared_data->print_mutex);
 }
 
 void	clean(t_data *data, t_philo *philos)
 {
 	int	i;
 
+	i = 0;
+	while(i < data->num_philos)
+	{
+		pthread_mutex_destroy(&data->philos[i].meal_mutex);
+		i++;
+	}
 	i = 0;
 	while(i < data->num_philos)
 	{
@@ -33,7 +42,6 @@ void	clean(t_data *data, t_philo *philos)
 	pthread_mutex_destroy(&data->stop_mutex);
 	free(data->forks);
 	free(philos);
-
 }
 
 long long	get_time(void)
@@ -53,6 +61,5 @@ void	precise_usleep(long long miliseconds, t_data *data)
 		if (check_stop(data))
 			break ;
 		usleep(1000);
-		//usleep(miliseconds/10);
 	}
 }

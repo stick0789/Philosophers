@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include "philo.h"
 
-void	print_status(t_philo *philo, char *str)
+/*void	print_status(t_philo *philo, char *str)
 {
 	long long timestamp;
 	char	*str_time;
@@ -32,7 +32,19 @@ void	print_status(t_philo *philo, char *str)
 		free(str_id);
 	}
 	pthread_mutex_unlock(&philo->shared_data->print_mutex);
+}*/
+
+void	print_status(t_philo *philo, char *str)
+{
+	pthread_mutex_lock(&philo->shared_data->print_mutex);
+	if (!check_stop(philo->shared_data))
+	{
+		printf("%lld %d %s\n", get_time() - philo->shared_data->start_time,
+			philo->id, str);
+	}
+	pthread_mutex_unlock(&philo->shared_data->print_mutex);
 }
+
 void	take_forks(t_philo *philo)
 {
 	if (philo->id == philo->shared_data->num_philos)
