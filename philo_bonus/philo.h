@@ -40,6 +40,7 @@ void    clean(t_data *data, t_philo *philos);
 long long       get_time(void);
 void    precise_usleep(long long miliseconds, t_data *data);
 void    print_status(t_philo *philo, char *str);
+void    print_status_live(t_philo *philo, char *str);
 /***	Parseo de datos/data parser	***/
 int    validate_av(int ac, char **av);
 /***	Inicializaciones datos/data inits	***/
@@ -49,6 +50,7 @@ void	init_mutexes(t_data *data);
 /***	Rutina filosofos/Philosopher routine	***/
 void    eat(t_philo *philo);
 void    sleep_philo(t_philo *philo);
+void    think_philo(t_philo *philo);
 void    release_forks(t_philo *philo);
 /***	Monitor y verificadores/Checkers and monitor	***/
 int	check_meals(t_data *data);

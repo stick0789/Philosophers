@@ -16,7 +16,7 @@ int	check_stop(t_data *data)
 	int	stop;
 
 	pthread_mutex_lock(&data->stop_mutex);
-	stop = data->stop_flag;
+	stop =  data->stop_flag;
 	pthread_mutex_unlock(&data->stop_mutex);
 	return (stop);
 }

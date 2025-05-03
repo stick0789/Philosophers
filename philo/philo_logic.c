@@ -88,11 +88,13 @@ void	*philosopher(void *arg)
 	t_philo *philo;
 
 	philo = (t_philo *)arg;
+	if (philo->shared_data->num_philos == 1)
+	{
+		print_status(philo, "has taken: right fork");
+		return (NULL);
+	}
 	if (philo->id % 2 == 0)
-		usleep(1500);
-		//usleep((philo->shared_data->time_to_eat * 0.7));
-		//usleep(1500);
-		//usleep((philo->shared_data->time_to_eat * 0.7));
+		usleep(5000);
 	while (!check_stop(philo->shared_data))
 	{
 		if (philo->shared_data->must_eat_count != -1 && philo->meals_eaten >= philo->shared_data->must_eat_count)

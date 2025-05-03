@@ -11,13 +11,40 @@
 /* ************************************************************************** */
 #include "philo.h"
 
+void	create_threads(t_data data, t_philo *philos, pthread_t *threads, pthread_t *monitor)
+{
+	int i;
+
+	i = 0;
+	while (i < data.num_philos)
+	{
+		pthread_create(&threads[i], NULL, philosopher, &philos[i]);
+		i++;
+	}
+	pthread_create(monitor, NULL, monitor_routine, &data);
+}
+
+int	handle_threads(t_data data, pthread_t *threads, pthread_t monitor)
+{
+	int	i;
+
+	pthread_join(monitor, NULL);
+	i = 0;
+	while (i < data.num_philos)
+	{
+		pthread_join(threads[i], NULL);	
+		i++;
+	}
+	return (0);
+}
+
 int main(int ac, char **av)
 {
 	t_data	data;
 	t_philo	*philos;
 	pthread_t	*threads;
 	pthread_t	monitor;
-	int	i;
+	//int	i;
 
 	if(validate_av(ac, av))
 	{
@@ -27,7 +54,9 @@ int main(int ac, char **av)
 		threads = malloc(data.num_philos * sizeof(pthread_t));
 		if (!threads)
 			return (0);
-		i = 0;
+		create_threads(data, philos, threads, &monitor);
+		handle_threads(data, threads, monitor);	
+		/*i = 0;
 		while (i < data.num_philos)
 		{
 			pthread_create(&threads[i], NULL, philosopher, &philos[i]);
@@ -47,8 +76,8 @@ int main(int ac, char **av)
 				pthread_join(threads[i], NULL);	
 			i++;
 		}
-		pthread_join(monitor, NULL);
-		sleep(2);
+		pthread_join(monitor, NULL);*/
+		//sleep(3);
 		clean(&data, philos);
 		free(threads);
 	}

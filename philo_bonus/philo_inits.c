@@ -25,20 +25,6 @@ t_data	init_data(int ac, char **av)
 		data.must_eat_count = ft_atoi(av[5]);
 	else
 		data.must_eat_count = -1;
-	/*data.forks = malloc(data.num_philos * sizeof(pthread_mutex_t));
-	if (!data.forks)
-		printf("Error: Fallo en malloc data.forks");
-	i = 0;
-	while (i < data.num_philos)
-	{
-		if(pthread_mutex_init(&data.forks[i], NULL) != 0)
-		printf("Error: Fallo al crear mutex de tenedor");
-		i++;
-	}
-	if (pthread_mutex_init(&data.print_mutex, NULL) != 0)
-		printf("Error: Fallo al crear mutex de impresion");
-	if (pthread_mutex_init(&data.stop_mutex, NULL) != 0)
-		printf("Error: Fallo al crear mutex de parada");*/
 	data.stop_flag = 0;
 	data.start_time = get_time();
 	init_mutexes(&data);
