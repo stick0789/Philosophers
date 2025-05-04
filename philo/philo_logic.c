@@ -47,41 +47,108 @@ void	print_status(t_philo *philo, char *str)
 
 void	take_forks(t_philo *philo)
 {
-	if (philo->id == philo->shared_data->num_philos)
+	long long think_delay = philo->id * 20;
+
+	if (philo->shared_data->must_eat_count != -1)
 	{
+        pthread_mutex_lock(&philo->meal_mutex);
+        if (philo->meals_eaten >= philo->shared_data->must_eat_count) 
+		{
+            pthread_mutex_unlock(&philo->meal_mutex);
+            return; // No toma tenedores si ya comió suficiente
+        }
+        pthread_mutex_unlock(&philo->meal_mutex);
+    }
+	if (philo->shared_data->num_philos == 2)
+    {
+		//printf("entro aqui %d\n", philo->id);
+		//precise_usleep(think_delay, philo->shared_data);
+        if (philo->id == 1)
+        {
+			
+            pthread_mutex_lock(philo->left_fork);
+            print_status(philo, "has taken: left fork");
+            pthread_mutex_lock(philo->right_fork);
+            print_status(philo, "has taken: right fork");
+        }
+        else
+        {
+            pthread_mutex_lock(philo->right_fork);
+            print_status(philo, "has taken: right fork");
+            pthread_mutex_lock(philo->left_fork);
+            print_status(philo, "has taken: left fork");
+        }
+        return ;
+    }
+	if (philo->id % 2 == 0)
+	{
+		//printf("entro aqui tambien");
+		precise_usleep(think_delay, philo->shared_data);
+		//usleep(5000);
 		pthread_mutex_lock(philo->right_fork);
 		print_status(philo, "has taken: right fork");
 		pthread_mutex_lock(philo->left_fork);
-		print_status(philo, "has taken left fork");
+		print_status(philo, "has taken: left fork");
 	}
 	else
 	{
-		if (philo->id % 2 == 0)
-		{
-			pthread_mutex_lock(philo->right_fork);
-			print_status(philo, "has taken: right fork");
-			pthread_mutex_lock(philo->left_fork);
-			print_status(philo, "has taken left fork");
-		}
-		else
-		{
-			pthread_mutex_lock(philo->left_fork);
-			print_status(philo, "has taken left fork");
-			pthread_mutex_lock(philo->right_fork);
-			print_status(philo, "has taken right fork");
-		}
+		pthread_mutex_lock(philo->left_fork);
+		print_status(philo, "has taken: left fork");
+		pthread_mutex_lock(philo->right_fork);
+		print_status(philo, "has taken: right fork");
 	}
-	/*if (philo->shared_data->must_eat_count != -1)
-	{
-		pthread_mutex_lock(&philo->meal_mutex);
-		if(philo->meals_eaten >= philo->shared_data->must_eat_count)
-		{
-			pthread_mutex_unlock(&philo->meal_mutex);
-			return ;
-		}
-		pthread_mutex_unlock(&philo->meal_mutex);
-	}*/
 }
+
+// void	take_forks(t_philo *philo)
+// {
+// 	if (philo->id == philo->shared_data->num_philos)
+// 	{
+// 		pthread_mutex_lock(philo->right_fork);
+// 		print_status(philo, "has taken: right fork");
+// 		pthread_mutex_lock(philo->left_fork);
+// 		print_status(philo, "has taken left fork");
+// 	}
+// 	else
+// 	{
+// 		if (philo->id % 2 == 0)
+// 		{
+// 			pthread_mutex_lock(philo->right_fork);
+// 			print_status(philo, "has taken: right fork");
+// 			pthread_mutex_lock(philo->left_fork);
+// 			print_status(philo, "has taken left fork");
+// 		}
+// 		else
+// 		{
+// 			pthread_mutex_lock(philo->left_fork);
+// 			print_status(philo, "has taken left fork");
+// 			pthread_mutex_lock(philo->right_fork);
+// 			print_status(philo, "has taken right fork");
+// 		}
+// 	}
+// 	// version original comentado lo siguiente
+// 	// if (philo->shared_data->must_eat_count != -1)
+// 	// {
+// 	// 	pthread_mutex_lock(&philo->meal_mutex);
+// 	// 	if(philo->meals_eaten >= philo->shared_data->must_eat_count)
+// 	// 	{
+// 	// 		pthread_mutex_unlock(&philo->meal_mutex);
+// 	// 		return ;
+// 	// 	}
+// 	// 	pthread_mutex_unlock(&philo->meal_mutex);
+// 	// }
+// }
+
+/*void think_philo(t_philo *philo) {
+    long long time_since_last_meal = get_time() - philo->last_meal;
+    
+    if (time_since_last_meal > philo->shared_data->time_to_die * 0.7) {
+        precise_usleep(philo->shared_data->time_to_eat, philo->shared_data);  // Espera larga
+    } else {
+		ft_usleep(5);
+        //precise_usleep(philo->shared_data->time_to_eat / 3, philo->shared_data);  // Espera normal
+    }
+	
+}*/
 
 void	*philosopher(void *arg)
 {
@@ -100,13 +167,9 @@ void	*philosopher(void *arg)
 		if (philo->shared_data->must_eat_count != -1 && philo->meals_eaten >= philo->shared_data->must_eat_count)
 			break ;
 		take_forks(philo);
-		
-		print_status(philo, "is eating");
-		//if (philo->shared_data->num_philos % 2 == 0 )
-		//{
 		update_last_meal(philo);
+		print_status(philo, "is eating");
 		precise_usleep(philo->shared_data->time_to_eat, philo->shared_data);
-		//}
 		
 		if (philo->id == philo->shared_data->num_philos)
 		{
@@ -120,7 +183,10 @@ void	*philosopher(void *arg)
 		}		
 		print_status(philo, "is sleeping");
 		precise_usleep(philo->shared_data->time_to_sleep, philo->shared_data);
-		print_status(philo, "is Thinking");
+		print_status(philo, "is thinking");
+		ft_usleep(5);
+		//think_philo(philo);
+		//precise_usleep(philo->shared_data->time_to_eat / 2, philo->shared_data);
 		/*if (philo->shared_data->num_philos % 2 != 0 )
 		{
 			update_last_meal(philo);
@@ -132,11 +198,39 @@ void	*philosopher(void *arg)
 	return (NULL);
 }
 
-void	set_stop(t_data *data)
+void	*monitor_routine(void *arg)
 {
-	pthread_mutex_lock(&data->stop_mutex);
-	data->stop_flag = 1;
-	pthread_mutex_unlock(&data->stop_mutex);
+	t_data *data;
+	int	i;
+
+	data = (t_data *)arg;
+	//while (!check_stop(data))
+	//while (!data->stop_flag)
+	if (data->num_philos % 2 == 0)
+		usleep(5000);
+	while (!check_stop(data))
+	{
+		//usleep(1500);
+		i = 0;
+		while(i < data->num_philos)
+		{
+			if ((get_time() - get_last_meal(&data->philos[i]) > data->time_to_die))
+			{
+				print_status(&data->philos[i], " died");
+				set_stop(data);
+				return (NULL);
+			}
+			i++;
+		}
+		if (check_meals(data))
+		{
+			set_stop(data);
+			return (NULL);
+		}
+	}
+	return (NULL);
 }
+
+
 
 

@@ -43,6 +43,22 @@ long long	get_time(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
+int	ft_usleep(time_t time)
+{
+	time_t	elapsed;
+	time_t	start_time;
+
+	start_time = get_time();
+	while (1)
+	{
+		elapsed = get_time() - start_time;
+		if (elapsed >= time)
+			break ;
+		usleep(500);
+	}
+	return (1);
+}
+
 void	precise_usleep(long long miliseconds, t_data *data)
 {
 	long long start;

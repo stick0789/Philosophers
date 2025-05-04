@@ -11,6 +11,13 @@
 /* ************************************************************************** */
 #include "philo.h"
 
+void	set_stop(t_data *data)
+{
+	pthread_mutex_lock(&data->stop_mutex);
+	data->stop_flag = 1;
+	pthread_mutex_unlock(&data->stop_mutex);
+}
+
 int	check_stop(t_data *data)
 {
 	int	stop;
@@ -59,36 +66,4 @@ int	check_meals(t_data *data)
 		i++;
 	}
 	return (1);
-}
-
-void	*monitor_routine(void *arg)
-{
-	t_data *data;
-	int	i;
-
-	data = (t_data *)arg;
-	//while (!check_stop(data))
-	//while (!data->stop_flag)
-	while (!check_stop(data))
-	{
-		usleep(1500);
-		i = 0;
-		while(i < data->num_philos)
-		{
-			if ((get_time() - get_last_meal(&data->philos[i]) > data->time_to_die))
-			{
-				print_status(&data->philos[i], "has died");
-				set_stop(data);
-				return (NULL);
-			}
-			i++;
-		}
-		if (check_meals(data))
-		{
-			set_stop(data);
-			return (NULL);
-		}
-		//return (NULL);
-	}
-	return (NULL);
 }
