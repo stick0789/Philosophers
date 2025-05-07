@@ -60,7 +60,7 @@ t_philo	*init_philos(t_data *data)
 		philos[i].right_fork = &data->forks[(i + 1) % data->num_philos];
 		if (pthread_mutex_init(&philos[i].meal_mutex, NULL) != 0)
 			ft_putstr_fd("Error: Fallo al crear mutex de comida", 1);
-		philos[i].last_meal = data->start_time;
+		philos[i].last_meal = get_time(); //data->start_time;
 		philos[i].meals_eaten = 0;
 		philos[i].shared_data = data;
 		i++;

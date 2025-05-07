@@ -47,55 +47,20 @@ void	print_status(t_philo *philo, char *str)
 
 void	take_forks(t_philo *philo)
 {
-	long long think_delay = philo->id * 20;
-
-	if (philo->shared_data->must_eat_count != -1)
-	{
-        pthread_mutex_lock(&philo->meal_mutex);
-        if (philo->meals_eaten >= philo->shared_data->must_eat_count) 
-		{
-            pthread_mutex_unlock(&philo->meal_mutex);
-            return; // No toma tenedores si ya comió suficiente
-        }
-        pthread_mutex_unlock(&philo->meal_mutex);
-    }
-	if (philo->shared_data->num_philos == 2)
-    {
-		//printf("entro aqui %d\n", philo->id);
-		//precise_usleep(think_delay, philo->shared_data);
-        if (philo->id == 1)
-        {
-			
-            pthread_mutex_lock(philo->left_fork);
-            print_status(philo, "has taken: left fork");
-            pthread_mutex_lock(philo->right_fork);
-            print_status(philo, "has taken: right fork");
-        }
-        else
-        {
-            pthread_mutex_lock(philo->right_fork);
-            print_status(philo, "has taken: right fork");
-            pthread_mutex_lock(philo->left_fork);
-            print_status(philo, "has taken: left fork");
-        }
-        return ;
-    }
 	if (philo->id % 2 == 0)
 	{
-		//printf("entro aqui tambien");
-		precise_usleep(think_delay, philo->shared_data);
-		//usleep(5000);
-		pthread_mutex_lock(philo->right_fork);
-		print_status(philo, "has taken: right fork");
 		pthread_mutex_lock(philo->left_fork);
 		print_status(philo, "has taken: left fork");
+		pthread_mutex_lock(philo->right_fork);
+		print_status(philo, "has taken: right fork");
+		
 	}
 	else
 	{
-		pthread_mutex_lock(philo->left_fork);
-		print_status(philo, "has taken: left fork");
 		pthread_mutex_lock(philo->right_fork);
 		print_status(philo, "has taken: right fork");
+		pthread_mutex_lock(philo->left_fork);
+		print_status(philo, "has taken: left fork");
 	}
 }
 
@@ -138,17 +103,11 @@ void	take_forks(t_philo *philo)
 // 	// }
 // }
 
-/*void think_philo(t_philo *philo) {
-    long long time_since_last_meal = get_time() - philo->last_meal;
-    
-    if (time_since_last_meal > philo->shared_data->time_to_die * 0.7) {
-        precise_usleep(philo->shared_data->time_to_eat, philo->shared_data);  // Espera larga
-    } else {
-		ft_usleep(5);
-        //precise_usleep(philo->shared_data->time_to_eat / 3, philo->shared_data);  // Espera normal
-    }
-	
-}*/
+void	ph_delay(time_t t_start)
+{
+	while (get_time() < t_start)
+		continue ;
+}
 
 void	*philosopher(void *arg)
 {
@@ -161,7 +120,10 @@ void	*philosopher(void *arg)
 		return (NULL);
 	}
 	if (philo->id % 2 == 0)
-		usleep(5000);
+		ft_usleep(5);
+		//ft_usleep(5000);
+		//ft_usleep(500);
+	//ph_delay(philo->shared_data->start_time);
 	while (!check_stop(philo->shared_data))
 	{
 		if (philo->shared_data->must_eat_count != -1 && philo->meals_eaten >= philo->shared_data->must_eat_count)
@@ -169,6 +131,9 @@ void	*philosopher(void *arg)
 		take_forks(philo);
 		update_last_meal(philo);
 		print_status(philo, "is eating");
+		//if (philo->shared_data->num_philos <= 100)
+		//{
+		//pthread_mutex_lock(&philo->shared_data->print_mutex);
 		precise_usleep(philo->shared_data->time_to_eat, philo->shared_data);
 		
 		if (philo->id == philo->shared_data->num_philos)
@@ -185,15 +150,10 @@ void	*philosopher(void *arg)
 		precise_usleep(philo->shared_data->time_to_sleep, philo->shared_data);
 		print_status(philo, "is thinking");
 		ft_usleep(5);
-		//think_philo(philo);
-		//precise_usleep(philo->shared_data->time_to_eat / 2, philo->shared_data);
-		/*if (philo->shared_data->num_philos % 2 != 0 )
-		{
-			update_last_meal(philo);
-			precise_usleep(philo->shared_data->time_to_eat, philo->shared_data);
-			//precise_usleep(philo->shared_data->time_to_sleep, philo->shared_data);
-		}*/
-		
+		//pthread_mutex_unlock(&philo->shared_data->print_mutex);
+		//}
+		//pthread_mutex_unlock(&philo->shared_data->print_mutex);
+		//return(NULL);
 	}
 	return (NULL);
 }
