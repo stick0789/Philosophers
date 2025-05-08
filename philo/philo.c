@@ -11,69 +11,44 @@
 /* ************************************************************************** */
 #include "philo.h"
 
-/*void	create_threads(t_data data, t_philo *philos, pthread_t *threads, pthread_t *monitor)
+void	run_simulation(t_data *data, t_philo *philos)
 {
-	int i;
+	pthread_t	*threads;
+	pthread_t	monitor;
+	int			i;
 
+	threads = malloc(data->num_philos * sizeof(pthread_t));
+	if (!threads)
+		return ;
 	i = 0;
-	while (i < data.num_philos)
+	while (i < data->num_philos)
 	{
 		pthread_create(&threads[i], NULL, philosopher, &philos[i]);
 		i++;
 	}
-	pthread_create(monitor, NULL, monitor_routine, &data);
-}
-
-int	handle_threads(t_data data, pthread_t *threads, pthread_t monitor)
-{
-	int	i;
-
-	pthread_join(monitor, NULL);
+	pthread_create(&monitor, NULL, monitor_routine, data);
 	i = 0;
-	while (i < data.num_philos)
+	while (i < data->num_philos)
 	{
-		pthread_join(threads[i], NULL);	
+		pthread_join(threads[i], NULL);
 		i++;
 	}
-	return (0);
-}*/
+	pthread_join(monitor, NULL);
+	ft_usleep(5);
+	clean(data, philos);
+	free(threads);
+}
 
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
 	t_data	data;
 	t_philo	*philos;
-	pthread_t	*threads;
-	pthread_t	monitor;
-	int	i;
 
-	if(validate_av(ac, av))
+	if (validate_av(ac, av))
 	{
 		data = init_data(ac, av);
 		philos = init_philos(&data);
 		data.philos = philos;
-		threads = malloc(data.num_philos * sizeof(pthread_t));
-		if (!threads)
-			return (0);
-		//create_threads(data, philos, threads, &monitor);
-		//handle_threads(data, threads, monitor);
-		i = 0;
-		while (i < data.num_philos)
-		{
-			pthread_create(&threads[i], NULL, philosopher, &philos[i]);
-			i++;
-		}
-		pthread_create(&monitor, NULL, monitor_routine, &data);
-		//handle_threads(data, threads, monitor);
-		i = 0;
-		while (i < data.num_philos)
-		{
-			pthread_join(threads[i], NULL);	
-			i++;
-		}
-		pthread_join(monitor, NULL);
-		ft_usleep(5);
-		clean(&data, philos);
-		free(threads);
+		run_simulation(&data, philos);
 	}
 }
-

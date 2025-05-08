@@ -6,7 +6,7 @@
 /*   By: jaacosta <jaacosta@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 21:26:52 by jaacosta          #+#    #+#             */
-/*   Updated: 2025/04/18 20:11:09 by jaacosta         ###   ########.fr       */
+/*   Updated: 2025/05/08 19:11:08 by jaacosta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "philo.h"
@@ -38,7 +38,7 @@ void	update_last_meal(t_philo *philo)
 
 long long	get_last_meal(t_philo *philo)
 {
-	long long time;
+	long long	time;
 
 	pthread_mutex_lock(&philo->meal_mutex);
 	time = philo->last_meal;
@@ -49,7 +49,6 @@ long long	get_last_meal(t_philo *philo)
 int	check_meals(t_data *data)
 {
 	int	i;
-
 
 	if (data->must_eat_count == -1)
 		return (0);

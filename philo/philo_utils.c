@@ -6,7 +6,7 @@
 /*   By: jaacosta <jaacosta@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 17:33:19 by jaacosta          #+#    #+#             */
-/*   Updated: 2025/04/18 20:28:07 by jaacosta         ###   ########.fr       */
+/*   Updated: 2025/05/08 19:31:03 by jaacosta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "philo.h"
@@ -24,7 +24,7 @@ void	clean(t_data *data, t_philo *philos)
 	int	i;
 
 	i = 0;
-	while(i < data->num_philos)
+	while (i < data->num_philos)
 	{
 		pthread_mutex_destroy(&data->forks[i]);
 		i++;
@@ -33,12 +33,12 @@ void	clean(t_data *data, t_philo *philos)
 	pthread_mutex_destroy(&data->stop_mutex);
 	free(data->forks);
 	free(philos);
-
 }
 
 long long	get_time(void)
 {
-	struct timeval tv;
+	struct timeval	tv;
+
 	gettimeofday(&tv, NULL);
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
@@ -61,7 +61,7 @@ int	ft_usleep(time_t time)
 
 void	precise_usleep(long long miliseconds, t_data *data)
 {
-	long long start;
+	long long	start;
 
 	start = get_time();
 	while (get_time() - start < miliseconds)
@@ -69,6 +69,5 @@ void	precise_usleep(long long miliseconds, t_data *data)
 		if (check_stop(data))
 			break ;
 		usleep(1000);
-		//usleep(miliseconds/10);
 	}
 }

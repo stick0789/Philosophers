@@ -18,7 +18,7 @@ void	take_forks(t_philo *philo)
         pthread_mutex_lock(&philo->meal_mutex);
         if (philo->meals_eaten >= philo->shared_data->must_eat_count) {
             pthread_mutex_unlock(&philo->meal_mutex);
-            return; // No toma tenedores si ya comió suficiente
+            return ;
         }
         pthread_mutex_unlock(&philo->meal_mutex);
     }
@@ -46,21 +46,16 @@ void	*philosopher(void *arg)
 	if (philo->shared_data->num_philos == 1)
 	{
 		print_status(philo, "has taken: right fork");
-		//print_status(philo, "has died");
-		//precise_usleep(philo->shared_data->time_to_die, philo->shared_data);
 		return (NULL);
 	}
 	if (philo->id % 2 == 0)
 		precise_usleep(1, philo->shared_data);
-	//usleep(1500);
 	if (philo->shared_data->stop_flag == 1 )
 		return (NULL) ;
 	else
 	{
 	while (!check_stop(philo->shared_data))
 	{
-		//printf("si entra %d", philo->shared_data->stop_flag);
-		// print_status(philo, "algo que entro");
 		take_forks(philo);
 		eat(philo);
 		release_forks(philo);
@@ -80,11 +75,8 @@ void *monitor_routine(void *arg) {
 	if (data->num_philos % 2 == 0)
 		precise_usleep(1, data);
     while (!check_stop(data)) {
-        usleep(500); // Chequeo cada 5ms
-        //printf("si entra");
-        // Verificar inanición
+        usleep(500);
         for (int i = 0; i < data->num_philos; i++) {
-			//pthread_mutex_lock(&data->stop_mutex);
             pthread_mutex_lock(&data->philos[i].meal_mutex);
             long long time_since_last_meal = get_time() - data->philos[i].last_meal;
             
@@ -92,11 +84,12 @@ void *monitor_routine(void *arg) {
 
                 pthread_mutex_lock(&data->print_mutex);
 				
-                if (!data->stop_flag) { // Doble verificación
+                if (!data->stop_flag) 
+				{
                     printf("%lld %d died\n", 
                           get_time() - data->start_time, 
                           data->philos[i].id);
-                    fflush(stdout);
+                    //fflush(stdout);
                     set_stop(data);
                 }
 				

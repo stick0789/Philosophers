@@ -14,7 +14,7 @@ NAME = philo
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror ##cc -fsanitize=thread -g -Werror -Wall -Wextra *.c -o philo -lpthread
-AR = ar -rcs
+AR = ar -rcs ##cc -g -Werror -Wall -Wextra *.c -o philo
 RM = rm -f
 
 SRCS = 	   ft_strlen.c ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c \
