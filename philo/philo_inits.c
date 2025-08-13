@@ -18,18 +18,18 @@ void	init_mutexes(t_data *data)
 	i = 0;
 	data->forks = malloc(data->num_philos * sizeof(pthread_mutex_t));
 	if (!data->forks)
-		ft_putstr_fd("Error: Fallo en malloc data.forks", 1);
+		printf("Error: Fallo en malloc data.forks");
 	i = 0;
 	while (i < data->num_philos)
 	{
 		if (pthread_mutex_init(&data->forks[i], NULL) != 0)
-			ft_putstr_fd("Error: Fallo al crear mutex de tenedor", 1);
+			printf("Error: Fallo al crear mutex de tenedor");
 		i++;
 	}
 	if (pthread_mutex_init(&data->print_mutex, NULL) != 0)
-		ft_putstr_fd("Error: Fallo al crear mutex de impresion", 1);
+		printf("Error: Fallo al crear mutex de impresion");
 	if (pthread_mutex_init(&data->stop_mutex, NULL) != 0)
-		ft_putstr_fd("Error: Fallo al crear mutex de parada", 1);
+		printf("Error: Fallo al crear mutex de parada");
 }
 
 t_data	init_data(int ac, char **av)
@@ -57,7 +57,7 @@ t_philo	*init_philos(t_data *data)
 
 	philos = malloc(data->num_philos * sizeof(t_philo));
 	if (!philos)
-		ft_putstr_fd("Error: Fallo en malloc philos", 1);
+		printf("Error: Fallo en malloc philos");
 	i = 0;
 	while (i < data->num_philos)
 	{
@@ -65,7 +65,7 @@ t_philo	*init_philos(t_data *data)
 		philos[i].left_fork = &data->forks[i];
 		philos[i].right_fork = &data->forks[(i + 1) % data->num_philos];
 		if (pthread_mutex_init(&philos[i].meal_mutex, NULL) != 0)
-			ft_putstr_fd("Error: Fallo al crear mutex de comida", 1);
+			printf("Error: Fallo al crear mutex de comida");
 		philos[i].last_meal = get_time();
 		philos[i].meals_eaten = 0;
 		philos[i].shared_data = data;

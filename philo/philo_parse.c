@@ -75,9 +75,9 @@ int	validate_av(int ac, char **av)
 		}
 		i++;
 	}
-	if (ft_atoi(av[1]) < 1 || ft_atoi(av[1]) > 200)
+	if (ft_atoi(av[1]) < 1)
 	{
-		printf("Error: Debe haber almenos un filosofo y maximo 200");
+		printf("Error: Debe haber al menos un filosofo");
 		return (0);
 	}
 	return (1);
