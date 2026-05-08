@@ -4,7 +4,7 @@ A multithreaded implementation of the classic dining philosophers problem using 
 
 ## Overview
 
-This project simulates multiple philosophers sitting at a table, alternating between thinking, eating, and sleeping. Each philosopher needs two forks to eat, and must avoid starvation while preventing deadlock situations. [1](#1-0) 
+This project simulates multiple philosophers sitting at a table, alternating between thinking, eating, and sleeping. Each philosopher needs two forks to eat, and must avoid starvation while preventing deadlock situations. 
 
 ## Features
 
@@ -21,11 +21,11 @@ This project simulates multiple philosophers sitting at a table, alternating bet
 
 The simulation uses two primary structures:
 
-**t_data** - Global configuration and shared state [2](#1-1) 
+**t_data** - Global configuration and shared state 
 - Contains simulation parameters, mutex arrays, and timing values
 - Manages global stop flag and philosopher array
 
-**t_philo** - Individual philosopher state [3](#1-2) 
+**t_philo** - Individual philosopher state 
 - Tracks meal timing, fork ownership, and personal statistics
 - Contains pointers to shared data and adjacent forks
 
@@ -49,7 +49,7 @@ graph TD
 make
 ```
 
-The Makefile compiles all source files with strict compiler flags [4](#1-3) :
+The Makefile compiles all source files with strict compiler flags :
 - `-Wall -Wextra -Werror` for strict error checking
 - Links with `-lpthread` for pthread support
 
@@ -70,20 +70,20 @@ The Makefile compiles all source files with strict compiler flags [4](#1-3) :
 
 ### Deadlock Prevention
 
-The project uses asymmetric resource acquisition based on philosopher ID [5](#1-4) :
+The project uses asymmetric resource acquisition based on philosopher ID  :
 - **Even IDs**: Lock left fork first, then right fork
 - **Odd IDs**: Lock right fork first, then left fork
 
 ### Monitor System
 
-A dedicated monitor thread continuously checks [6](#1-5) :
+A dedicated monitor thread continuously checks :
 - If any philosopher exceeded `time_to_die` since last meal
 - If all philosophers completed required meal count
 - Sets global stop flag to terminate simulation gracefully
 
 ### Thread-Safe Operations
 
-Critical sections are protected by mutexes [7](#1-6) :
+Critical sections are protected by mutexes :
 - `stop_mutex`: Protects global stop flag
 - `print_mutex`: Prevents overlapping log messages
 - `meal_mutex`: Per-philosopher protection for meal data
@@ -91,18 +91,18 @@ Critical sections are protected by mutexes [7](#1-6) :
 
 ### Precise Timing
 
-Custom `ft_usleep` implementation provides higher precision than standard `usleep` [8](#1-7)  by using busy-wait loops with small sleep increments.
+Custom `ft_usleep` implementation provides higher precision than standard `usleep`  by using busy-wait loops with small sleep increments.
 
 ## File Structure
 
-- `philo.c` - Main program entry point and simulation runner [9](#1-8) 
-- `philo.h` - Header with data structures and function declarations [10](#1-9) 
-- `philo_logic.c` - Core philosopher logic and monitor routine [11](#1-10) 
-- `philo_routine.c` - Philosopher actions (eat, sleep, think) [12](#1-11) 
-- `philo_checks.c` - Thread-safe state checking and updating [13](#1-12) 
-- `philo_inits.c` - Data structure initialization [14](#1-13) 
-- `philo_parse.c` - Command line argument validation [15](#1-14) 
-- `philo_utils.c` - Utility functions and timing [16](#1-15) 
+- `philo.c` - Main program entry point and simulation runner 
+- `philo.h` - Header with data structures and function declarations
+- `philo_logic.c` - Core philosopher logic and monitor routine
+- `philo_routine.c` - Philosopher actions (eat, sleep, think) 
+- `philo_checks.c` - Thread-safe state checking and updating  
+- `philo_inits.c` - Data structure initialization
+- `philo_parse.c` - Command line argument validation 
+- `philo_utils.c` - Utility functions and timing
 
 ## Notes
 
